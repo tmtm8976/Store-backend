@@ -1,23 +1,23 @@
-import express ,{ Application} from 'express'
+import express, { Application } from 'express'
+import routes from './routes'
 
-const {
-    ENV
-} = process.env
+import bodyParser from 'body-parser'
 
-const PORT = 3000 ;
+const { ENV } = process.env
 
-const app : Application= express();
+const PORT = 3000
 
+const app: Application = express()
 
-app.get('/',(req : express.Request, res : express.Response )=>{
+app.use(bodyParser.json())
+app.use('/api', routes)
+
+app.get('/', (req: express.Request, res: express.Response) => {
     res.send('main server route')
 })
 
-
-app.listen(PORT,()=>{
-   if(ENV!='test') console.log('app started listening on port: '+PORT);
-    
+app.listen(PORT, () => {
+    if (ENV != 'test') console.log('app started listening on port: ' + PORT)
 })
 
-
-export default app ;
+export default app

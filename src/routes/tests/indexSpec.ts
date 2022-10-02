@@ -3,8 +3,8 @@ import app from '..'
 
 const req = supertest(app)
 
-describe('Test the base end point', () => {
-    it('Get the / endpoint', async () => {
+describe('Test main server router', () => {
+    it('Get the /api/ endpoint', async () => {
         const res = await req.get('/')
         expect(res.status).toBe(200)
     })
