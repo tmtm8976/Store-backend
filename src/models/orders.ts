@@ -1,16 +1,16 @@
 import client from '../database'
 
 export type order = {
-    id?: Number
+    id?: number
     status: string
-    user_id: string | Number | null
+    user_id: string | number | null
 }
 
 export type product_order = {
-    id? : Number | string ,
-    quantity: number ,
-    product_id : string,
-    order_id : string
+    id?: number | string
+    quantity: number
+    product_id: string
+    order_id: string
 }
 
 export class Order {
@@ -77,12 +77,13 @@ export class Order {
     }
 
     //method to get active orders
-    async active_orders(): Promise<order[]> {
+    async active_orders(user_id: number): Promise<order[]> {
         try {
-            const sql = "SELECT * FROM orders WHERE status='open'"
+            const sql =
+                "SELECT * FROM orders WHERE status='open' AND user_id = $1"
             const conn = await client.connect()
 
-            const result = await conn.query(sql)
+            const result = await conn.query(sql, [user_id])
 
             conn.release()
 
@@ -93,12 +94,13 @@ export class Order {
     }
 
     //method to get completed orders
-    async complete_orders(): Promise<order[]> {
+    async complete_orders(user_id: number): Promise<order[]> {
         try {
-            const sql = "SELECT * FROM orders WHERE status='complete'"
+            const sql =
+                "SELECT * FROM orders WHERE status='complete' AND user_id = $1"
             const conn = await client.connect()
 
-            const result = await conn.query(sql)
+            const result = await conn.query(sql, [user_id])
 
             conn.release()
 
@@ -109,20 +111,29 @@ export class Order {
     }
 
     //method to add product to the order
-    async addProduct(product : {quantity: number, order_id : string, product_id : string}) : Promise<product_order>{
+    async addProduct(product: {
+        quantity: number
+        order_id: string
+        product_id: string
+    }): Promise<product_order> {
         try {
+            const sql =
+                'INSERT INTO order_products(quantity, order_id, product_id) VALUES($1, (SELECT id FROM orders WHERE id=$2), (SELECT id FROM products WHERE id=$3)) RETURNING id, quantity, product_id, order_id ; '
+            const conn = await client.connect()
 
-            const sql = 'INSERT INTO order_products(quantity, order_id, product_id) VALUES($1, (SELECT id FROM orders WHERE id=$2), (SELECT id FROM products WHERE id=$3)) RETURNING id, quantity, product_id, order_id ; '
-            const conn = await client.connect();
-
-            const result = await conn.query(sql,[product.quantity, product.order_id, product.product_id])
+            const result = await conn.query(sql, [
+                product.quantity,
+                product.order_id,
+                product.product_id,
+            ])
             const order = result.rows[0]
 
             conn.release()
-            return order 
+            return order
         } catch (error) {
-           throw new Error(`Could not add product ${product.product_id} to order ${product.order_id}: ${error}`) 
+            throw new Error(
+                `Could not add product ${product.product_id} to order ${product.order_id}: ${error}`
+            )
         }
-
     }
 }

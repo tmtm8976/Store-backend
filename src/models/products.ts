@@ -1,10 +1,10 @@
 import client from '../database'
 
 export type product = {
-    id?: Number
+    id?: number
     name: string
-    price: Number
-    category : string
+    price: number
+    category: string
 }
 
 export class Product {
@@ -55,7 +55,7 @@ export class Product {
         }
     }
 
-    async popular(): Promise<{product_id:string,total_quantity:string}[]> {
+    async popular(): Promise<{ product_id: string; total_quantity: string }[]> {
         try {
             const sql = `SELECT Product_id, SUM(Quantity) AS Total_Quantity
             FROM order_products

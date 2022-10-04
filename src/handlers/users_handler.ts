@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { user, userModel } from '../models/users'
-import jwt from 'jsonwebtoken';
+import { userModel } from '../models/users'
+import jwt from 'jsonwebtoken'
 
 const user_model = new userModel()
 
@@ -12,10 +12,14 @@ export const create = async (
 ) => {
     try {
         const newuser = await user_model.create(req.body)
-        var token = jwt.sign({user: newuser},process.env.TOKEN_SECRET as unknown as string)
+        const token = jwt.sign(
+            { user: newuser },
+            process.env.TOKEN_SECRET as unknown as string
+        )
         res.json({
             status: 'success',
-            data: {token},
+            user: newuser,
+            token: token,
             message: 'User Created Successfully',
         })
     } catch (error) {
@@ -23,6 +27,7 @@ export const create = async (
     }
 }
 
+//index
 export const index = async (
     _req: Request,
     res: Response,
@@ -33,7 +38,7 @@ export const index = async (
         res.json({
             message: 'users retrived successfully',
             status: 'success',
-            body: { ...users },
+            users: [...users],
         })
     } catch (err) {
         next(err)
@@ -47,7 +52,7 @@ export const show = async (req: Request, res: Response, next: NextFunction) => {
         res.json({
             message: 'user retrived successfully',
             status: 'success',
-            body: user,
+            user: user,
         })
     } catch (err) {
         next(err)
@@ -65,33 +70,40 @@ export const delete_user = async (
         res.json({
             message: 'user deleted successfully',
             status: 'success',
-            body: user,
+            user: user,
         })
     } catch (err) {
         next(err)
     }
 }
 
-
 //authenticate
-export const authenticate =async (req: Request, res: Response, next : NextFunction) => {
+export const authenticate = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
-        const { id, password } = req.body;
-        const user = await user_model.authenticate(id, password);
-        const token = jwt.sign({user}, process.env.TOKEN_SECRET as unknown as string);
+        const { id, password } = req.body
+        const user = await user_model.authenticate(id, password)
+        const token = jwt.sign(
+            { user },
+            process.env.TOKEN_SECRET as unknown as string
+        )
 
-        if (!user) {
+        if (user == null) {
             return res.status(401).json({
                 message: "the id and password doesn't match, please try again!",
-                status: "error"
-            });
+                status: 'error',
+            })
         }
         return res.json({
-            message: "logged in succesfully!",
-            status: "success",
-            body: {...user, token}
-        });
+            message: 'logged in succesfully!',
+            status: 'success',
+            user: user,
+            token: token,
+        })
     } catch (error) {
-        return next(error);
+        return next(error)
     }
 }

@@ -1,14 +1,11 @@
-import { Product } from '../products'
 import { Order } from '../orders'
-import client from '../../database'
 
 const { ENV } = process.env
 
 const order_obj = new Order()
 
 describe(`order Model ${ENV}`, () => {
-    describe('order model mehtods check: ' , () => {
-        
+    describe('order model mehtods check: ', () => {
         it('should have index method', () => {
             expect(order_obj.index).toBeDefined()
         })
@@ -37,9 +34,7 @@ describe(`order Model ${ENV}`, () => {
         })
     })
 
-
-    describe('testing order model methods: ' , () => {
-
+    describe('testing order model methods: ', () => {
         //create
         it('create method should add an order', async () => {
             const result = await order_obj.create({
@@ -55,9 +50,9 @@ describe(`order Model ${ENV}`, () => {
 
         //index
         it('index method should return a list of all orders', async () => {
-            const result = await order_obj.index();
-            expect(result.length).toEqual(8);
-        });
+            const result = await order_obj.index()
+            expect(result.length).toEqual(8)
+        })
 
         //show
         it('show method should return the correct order', async () => {
@@ -78,74 +73,45 @@ describe(`order Model ${ENV}`, () => {
         })
 
         //get active orders
-        it('get active orders method should return current orders', async () => {
-            const result = await order_obj.active_orders()
+        it('get active orders method should return current orders orders by user id', async () => {
+            const result = await order_obj.active_orders(3)
 
             expect(result).toEqual([
-                {
-                    id: 1,
-                    status: 'open',
-                    user_id: '1',
-                },
-                {
-                    id: 2,
-                    status: 'open',
-                    user_id: '2',
-                },
                 {
                     id: 3,
                     status: 'open',
                     user_id: '3',
-                }
+                },
             ])
         })
 
         //get complete orders
-        it('complete orders method should return a list of all completed orders', async () => {
-            const result = await order_obj.complete_orders()
+        it('complete orders method should return a list of all completed orders by user id', async () => {
+            const result = await order_obj.complete_orders(1)
 
             expect(result).toEqual([
-                {
-                    id: 4,
-                    status: 'complete',
-                    user_id: '4',
-                },
-                {
-                    id: 5,
-                    status: 'complete',
-                    user_id: '5',
-                },
                 {
                     id: 6,
                     status: 'complete',
                     user_id: '1',
                 },
-                {
-                    id: 7,
-                    status: 'complete',
-                    user_id: '2',
-                },
             ])
         })
 
-        //add product  (10, (SELECT id FROM orders WHERE id=2), (SELECT id FROM products WHERE id=9))
+        //add product
         it('add product method should add product to the order', async () => {
-            
             const result = await order_obj.addProduct({
-               quantity: 1, 
-               order_id:'1', 
-               product_id: '1'
+                quantity: 1,
+                order_id: '1',
+                product_id: '1',
             })
 
-            expect(result).toEqual(
-                {
-                    id: 11,
-                    quantity: 1 ,
-                    product_id: '1',
-                    order_id: '1'
-                }
-            )
+            expect(result).toEqual({
+                id: 11,
+                quantity: 1,
+                product_id: '1',
+                order_id: '1',
+            })
         })
     })
-    
 })

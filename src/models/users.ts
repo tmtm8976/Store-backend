@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 
 const { SALT_ROUNDS, PEPPER } = process.env
 
-const hashing = (password: string) => {
+export const hashing = (password: string) => {
     const salt = parseInt(SALT_ROUNDS as string, 10)
     return bcrypt.hashSync(`${password}${PEPPER}`, salt)
 }
@@ -31,7 +31,9 @@ export class userModel {
     }
 
     //show one user
-    async show(id: number | string): Promise<{id : number, first_name : string, last_name : string}> {
+    async show(
+        id: number | string
+    ): Promise<{ id: number; first_name: string; last_name: string }> {
         try {
             const sql =
                 'SELECT id, first_name, last_name FROM users WHERE id=($1);'
@@ -48,14 +50,16 @@ export class userModel {
     }
 
     //create user
-    async create(u: user): Promise<{id : number, first_name : string, last_name : string}> {
+    async create(
+        u: user
+    ): Promise<{ id: number; first_name: string; last_name: string }> {
         try {
             const sql = `INSERT INTO users (first_name, last_name, password) VALUES($1, $2, $3) RETURNING id, first_name, last_name ;`
             const conn = await client.connect()
 
             const hash = hashing(u.password)
 
-            const result  = await conn.query(sql, [
+            const result = await conn.query(sql, [
                 u.first_name,
                 u.last_name,
                 hash,
@@ -73,7 +77,8 @@ export class userModel {
     //delete
     async delete(id: number | string): Promise<user> {
         try {
-            const sql = 'DELETE FROM users WHERE id=($1) RETURNING id, first_name, last_name ;'
+            const sql =
+                'DELETE FROM users WHERE id=($1) RETURNING id, first_name, last_name ;'
             const conn = await client.connect()
 
             const result = await conn.query(sql, [id])
@@ -88,6 +93,7 @@ export class userModel {
         }
     }
 
+    //Authenticate
     async authenticate(id: string, password: string): Promise<user | null> {
         try {
             const conn = await client.connect()
@@ -106,6 +112,7 @@ export class userModel {
                         'SELECT first_name, last_name, id FROM users WHERE id=($1);',
                         [id]
                     )
+                    conn.release()
                     return user_info.rows[0]
                 }
             }

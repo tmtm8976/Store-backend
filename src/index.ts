@@ -1,5 +1,6 @@
 import express, { Application } from 'express'
 import routes from './routes'
+import errorMiddleWare from './middleware/errorMiddleware'
 
 import bodyParser from 'body-parser'
 
@@ -12,8 +13,16 @@ const app: Application = express()
 app.use(bodyParser.json())
 app.use('/api', routes)
 
-app.get('/', (req: express.Request, res: express.Response) => {
+app.get('/', (_req: express.Request, res: express.Response) => {
     res.send('main server route')
+})
+
+app.use(errorMiddleWare)
+
+app.use((_req: express.Request, res: express.Response) => {
+    res.status(400).json({
+        message: 'route lost',
+    })
 })
 
 app.listen(PORT, () => {

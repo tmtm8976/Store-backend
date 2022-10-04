@@ -1,32 +1,176 @@
-import client from '../../database'
+import { userModel } from '../users'
+import { Product } from '../products'
+import { Order } from '../orders'
 
 export const insert_test_data = async () => {
-    const user_sql = `INSERT INTO users (first_name, last_name, password) VALUES
-    ('user1', 'user1', 'pass123'), ('user2', 'user2', 'pass123'), ('user3', 'user3', 'pass123'), ('user4', 'user4', 'pass123'), ('user5', 'user5', 'pass123');`
+    //__________________________ ussers table data.______________________________________________________
 
-    const product_sql =  `INSERT INTO products (name, price, category) VALUES
-    ('product1', 10, 'cate1'), ('product2', 15, 'cate1'), ('product3', 20, 'cate1'), ('product4', 25, 'cate2'),
-    ('product5', 30, 'cate2'), ('product6', 35, 'cate2'), ('product7', 40, 'cate3'), ('product8', 45, 'cate3'),
-    ('product9', 50, 'cate3'), ('product10', 55, 'cate3');`
+    const user_obj = new userModel()
 
-    const order_sql = `INSERT INTO orders (status, user_id) VALUES
-    ('open', (SELECT id FROM users WHERE id=1)), ('open', (SELECT id FROM users WHERE id=2)), ('open', (SELECT id FROM users WHERE id=3)),
-    ('complete', (SELECT id FROM users WHERE id=4)), ('complete', (SELECT id FROM users WHERE id=5)), ('complete', (SELECT id FROM users WHERE id=1)),
-    ('complete', (SELECT id FROM users WHERE id=2)) ;` 
+    await user_obj.create({
+        first_name: 'user1',
+        last_name: 'user1',
+        password: 'pass123',
+    })
+    await user_obj.create({
+        first_name: 'user2',
+        last_name: 'user2',
+        password: 'pass123',
+    })
+    await user_obj.create({
+        first_name: 'user3',
+        last_name: 'user3',
+        password: 'pass123',
+    })
+    await user_obj.create({
+        first_name: 'user4',
+        last_name: 'user4',
+        password: 'pass123',
+    })
+    await user_obj.create({
+        first_name: 'user5',
+        last_name: 'user5',
+        password: 'pass123',
+    })
 
-    const order_product_sql = `INSERT INTO order_products (quantity, order_id, product_id) VALUES
-    (1, (SELECT id FROM orders WHERE id=1), (SELECT id FROM products WHERE id=1)), (2, (SELECT id FROM orders WHERE id=2), (SELECT id FROM products WHERE id=2)),
-    (3, (SELECT id FROM orders WHERE id=3), (SELECT id FROM products WHERE id=3)), (4, (SELECT id FROM orders WHERE id=4), (SELECT id FROM products WHERE id=4)),
-    (3, (SELECT id FROM orders WHERE id=5), (SELECT id FROM products WHERE id=5)), (7, (SELECT id FROM orders WHERE id=6), (SELECT id FROM products WHERE id=6)),
-    (8, (SELECT id FROM orders WHERE id=7), (SELECT id FROM products WHERE id=7)), (9, (SELECT id FROM orders WHERE id=1), (SELECT id FROM products WHERE id=8)),
-    (10, (SELECT id FROM orders WHERE id=2), (SELECT id FROM products WHERE id=9)), (4, (SELECT id FROM orders WHERE id=3), (SELECT id FROM products WHERE id=1)); `
+    //__________________________ products table data.______________________________________________________
 
+    const product_obj = new Product()
 
-    const conn = await client.connect() ;
-    await conn.query(user_sql);
-    await conn.query(product_sql);
-    await conn.query(order_sql);
-    await conn.query(order_product_sql);
+    await product_obj.create({
+        name: 'product1',
+        price: 10,
+        category: 'cate1',
+    })
+    await product_obj.create({
+        name: 'product2',
+        price: 15,
+        category: 'cate1',
+    })
+    await product_obj.create({
+        name: 'product3',
+        price: 20,
+        category: 'cate1',
+    })
+    await product_obj.create({
+        name: 'product4',
+        price: 25,
+        category: 'cate2',
+    })
+    await product_obj.create({
+        name: 'product5',
+        price: 30,
+        category: 'cate2',
+    })
+    await product_obj.create({
+        name: 'product6',
+        price: 35,
+        category: 'cate2',
+    })
+    await product_obj.create({
+        name: 'product7',
+        price: 40,
+        category: 'cate3',
+    })
+    await product_obj.create({
+        name: 'product8',
+        price: 45,
+        category: 'cate3',
+    })
+    await product_obj.create({
+        name: 'product9',
+        price: 50,
+        category: 'cate3',
+    })
+    await product_obj.create({
+        name: 'product10',
+        price: 55,
+        category: 'cate3',
+    })
 
-    conn.release() ;
+    //__________________________orders table data.______________________________________________________
+
+    const order_obj = new Order()
+
+    await order_obj.create({
+        status: 'open',
+        user_id: 1,
+    })
+    await order_obj.create({
+        status: 'open',
+        user_id: 2,
+    })
+    await order_obj.create({
+        status: 'open',
+        user_id: 3,
+    })
+    await order_obj.create({
+        status: 'complete',
+        user_id: 4,
+    })
+    await order_obj.create({
+        status: 'complete',
+        user_id: 5,
+    })
+    await order_obj.create({
+        status: 'complete',
+        user_id: 1,
+    })
+    await order_obj.create({
+        status: 'complete',
+        user_id: 2,
+    })
+
+    //__________________________ order_products table data.______________________________________________________
+
+    await order_obj.addProduct({
+        quantity: 1,
+        order_id: '1',
+        product_id: '1',
+    })
+    await order_obj.addProduct({
+        quantity: 2,
+        order_id: '2',
+        product_id: '2',
+    })
+    await order_obj.addProduct({
+        quantity: 3,
+        order_id: '3',
+        product_id: '3',
+    })
+    await order_obj.addProduct({
+        quantity: 4,
+        order_id: '4',
+        product_id: '4',
+    })
+    await order_obj.addProduct({
+        quantity: 3,
+        order_id: '5',
+        product_id: '5',
+    })
+    await order_obj.addProduct({
+        quantity: 7,
+        order_id: '6',
+        product_id: '6',
+    })
+    await order_obj.addProduct({
+        quantity: 8,
+        order_id: '7',
+        product_id: '7',
+    })
+    await order_obj.addProduct({
+        quantity: 9,
+        order_id: '1',
+        product_id: '8',
+    })
+    await order_obj.addProduct({
+        quantity: 10,
+        order_id: '2',
+        product_id: '9',
+    })
+    await order_obj.addProduct({
+        quantity: 4,
+        order_id: '3',
+        product_id: '1',
+    })
 }

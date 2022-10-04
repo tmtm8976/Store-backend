@@ -9,5 +9,4 @@ route.use('/users', user)
 route.use('/products', product)
 route.use('/orders', order)
 
-
 export default route

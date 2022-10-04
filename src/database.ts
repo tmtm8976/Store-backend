@@ -1,4 +1,3 @@
-import { json } from 'body-parser'
 import dotenv from 'dotenv'
 import { Pool } from 'pg'
 
