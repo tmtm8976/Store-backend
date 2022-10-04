@@ -91,3 +91,19 @@
     order_id:varchar, 
     product_id:varchar
     )
+
+
+## ENVIROMRNT VARIABLES
+
+PORT = 3000
+ENV = dev
+
+POSTGRES_HOST = localhost
+POSTGRES_PORT = 5432
+POSTGRES_DB = store_dev
+POSTGRES_DB_TEST = store_test
+POSTGRES_USER = postgres
+POSTGRES_PASSWORD = sys
+SALT_ROUNDS = 10 
+PEPPER = hahahhah-not-even-close
+TOKEN_SECRET = thatsAtokenSecretem13m14m15kksserer
