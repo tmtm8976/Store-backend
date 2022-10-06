@@ -11,6 +11,11 @@
 . get active/complete orders by user id
 . add product to order
 
+## PORTS:
+- database : 5432 
+- server : 3000
+
+
 ## Build:
 . in your terminal run: 
 - npm intit 
