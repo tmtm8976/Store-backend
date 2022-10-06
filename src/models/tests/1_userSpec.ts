@@ -1,7 +1,8 @@
 import { userModel } from '../users'
 import { insert_test_data } from './test_data'
+import config from '../../config'
 
-const { ENV } = process.env
+const  env = config.env
 
 const user_obj = new userModel()
 
@@ -10,7 +11,7 @@ beforeAll(async () => {
     await insert_test_data()
 })
 
-describe(`User Model ${ENV}`, () => {
+describe(`User Model ${env}`, () => {
     describe('User model mehtods check: ', () => {
         it('should have index method', () => {
             expect(user_obj.index).toBeDefined()

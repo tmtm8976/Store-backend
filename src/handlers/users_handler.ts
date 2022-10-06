@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { userModel } from '../models/users'
 import jwt from 'jsonwebtoken'
+import config from '../config'
+import errorMiddleWare from '../middleware/errorMiddleware'
 
 const user_model = new userModel()
 
@@ -14,7 +16,7 @@ export const create = async (
         const newuser = await user_model.create(req.body)
         const token = jwt.sign(
             { user: newuser },
-            process.env.TOKEN_SECRET as unknown as string
+            config.token as unknown as string
         )
         res.json({
             status: 'success',
@@ -23,7 +25,7 @@ export const create = async (
             message: 'User Created Successfully',
         })
     } catch (error) {
-        next(error)
+        next(errorMiddleWare(error as Error, req, res))
     }
 }
 
@@ -88,7 +90,7 @@ export const authenticate = async (
         const user = await user_model.authenticate(id, password)
         const token = jwt.sign(
             { user },
-            process.env.TOKEN_SECRET as unknown as string
+            config.token as unknown as string
         )
 
         if (user == null) {

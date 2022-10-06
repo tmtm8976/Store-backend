@@ -1,10 +1,11 @@
 import { Order } from '../orders'
+import config from '../../config'
 
-const { ENV } = process.env
+const env  = config.env
 
 const order_obj = new Order()
 
-describe(`order Model ${ENV}`, () => {
+describe(`order Model ${env}`, () => {
     describe('order model mehtods check: ', () => {
         it('should have index method', () => {
             expect(order_obj.index).toBeDefined()

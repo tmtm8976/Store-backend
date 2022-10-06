@@ -1,8 +1,8 @@
 ## STORE FRONT BACKEND
 - this project is a backend of a store providing the following functionalities:
-. log in (authenticate)/ sign up(create user)
+. log in (authenticate)/sign up(create user)
 . delete and show one or all users
-. add / delete products
+. add/delete products
 . show all products
 . get one product
 . show top 5 most popular products
@@ -17,6 +17,21 @@
 - npm install
 - npm run build
 - npm run format
+
+## Database installation and setup
+- postgres should be installed to your machine 
+- the required packages are added to the package.json file and will be installed by running npm install
+* Database running on port: 5432
+
+#### Setup
+- create two databases one for testing and one for development, In your terminal run:
+ 1. psql -U <username>
+ 2. <password>
+ 3. CREATE DATABASE store_dev ;
+ 4. CREATE DATABASE store_test ;
+ 5. \q 
+ 6. db-migrate up 
+
 
 ## Usage Instructions:
 . to start the application run: npm run start
@@ -39,6 +54,7 @@
 - jasmine from npm for testing
 
 ## API Endpoints
+* Server running on port: 3000
 #### Products
 - A Index route: 'api/products [GET]
 - A SHOW route: 'api/products/:id' [GET]

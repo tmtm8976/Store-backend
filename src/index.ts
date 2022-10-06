@@ -1,12 +1,12 @@
 import express, { Application } from 'express'
 import routes from './routes'
 import errorMiddleWare from './middleware/errorMiddleware'
+import config from './config'
 
 import bodyParser from 'body-parser'
 
-const { ENV } = process.env
 
-const PORT = 3000
+const PORT = config.port
 
 const app: Application = express()
 
@@ -26,7 +26,7 @@ app.use((_req: express.Request, res: express.Response) => {
 })
 
 app.listen(PORT, () => {
-    if (ENV != 'test') console.log('app started listening on port: ' + PORT)
+    if (config.env != 'test') console.log('app started listening on port: ' + PORT)
 })
 
 export default app

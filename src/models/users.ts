@@ -1,11 +1,12 @@
 import client from '../database'
 import bcrypt from 'bcrypt'
+import config from '../config'
 
-const { SALT_ROUNDS, PEPPER } = process.env
+const salt_rounds  = config.salt, pepper = config.pepper
 
 export const hashing = (password: string) => {
-    const salt = parseInt(SALT_ROUNDS as string, 10)
-    return bcrypt.hashSync(`${password}${PEPPER}`, salt)
+    const salt = parseInt(salt_rounds as unknown as string, 10)
+    return bcrypt.hashSync(`${password}${pepper}`, salt)
 }
 
 export type user = {
@@ -103,7 +104,7 @@ export class userModel {
             if (result.rows.length != 0) {
                 const { password: hashPasword } = result.rows[0]
                 const validatePassword = bcrypt.compareSync(
-                    `${password}${PEPPER}`,
+                    `${password}${pepper}`,
                     hashPasword
                 )
 

@@ -1,10 +1,11 @@
 import { Product } from '../products'
+import config from '../../config'
 
-const { ENV } = process.env
+const env = config.env
 
 const product_obj = new Product()
 
-describe(`Product Model ${ENV}`, () => {
+describe(`Product Model ${env}`, () => {
     describe('product model mehtods check: ', () => {
         it('should have index method', () => {
             expect(product_obj.index).toBeDefined()

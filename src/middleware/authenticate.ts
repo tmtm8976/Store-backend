@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import error from '../interfaces/error.interface'
+import config from '../config'
 
 const handelError = (next: NextFunction) => {
     const err: error = new Error('Login Error: please try again')
@@ -20,7 +21,7 @@ const validateToken = (req: Request, _res: Response, next: NextFunction) => {
             if (token && bearer === 'bearer') {
                 const decode = jwt.verify(
                     token,
-                    process.env.TOKEN_SECRET as unknown as string
+                    config.token as unknown as string
                 )
                 if (decode) {
                     next()
